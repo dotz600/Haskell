@@ -49,6 +49,9 @@ label _label = "(" ++ _label ++ ")\n"
 goto :: String -> String
 goto label = "@" ++ label ++ "\n0;JMP\n"
 
+if_goto :: String -> String
+if_goto label = "@SP\n" ++ "M=M-1\n" ++ "A=M\n" ++ "D=M\n" ++ "@" ++ label ++ "\nD;JNE\n" --double check maby need JEQ
+
 pushFromSegment :: String -> String -> String
 pushFromSegment segment i =
     let num = read i :: Int
@@ -141,6 +144,7 @@ operation filename labelCount oper =
             "gt"   -> (gt labelCount, labelCount + 1)
             "label" -> (label (head params), labelCount)
             "goto" -> (goto (head params), labelCount)
+            "if-goto"  -> (if_goto (head params), labelCount)
             _      -> ("", labelCount)
 
 
